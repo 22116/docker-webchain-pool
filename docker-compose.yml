@@ -1,0 +1,32 @@
+version: "3.3"
+services:
+  pool:
+    image: 22116/webchain-pool:latest
+    ports:
+      - 3333:3333
+      - 8888:8888
+    volumes:
+      - ./config.json:/app/config.json
+      - ./environment.js:/app/www/config/environment.js
+      - assets:/app/www/dist
+  daemon:
+    image: 22116/webchaind:latest
+    volumes:
+      - /home/victor/Documents/Coins/WEB/password.txt:/data/password
+      - /home/victor/Documents/Coins/WEB/private.txt:/data/private
+  redis:
+    image: redis
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: "redis-server /usr/local/etc/redis/redis.conf"
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8000:8000
+      - 8080:8080
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - assets:/var/www/html/
+
+volumes:
+  assets:
